@@ -46,11 +46,13 @@ function createFirstUser(password) {
         await users.defineAUserNow();
         await createFirstUser.fillFullName("Bernhard M. Wiedemann");
         await createFirstUser.fillUserName("bernhard");
+        await createFirstUser.takeScreenshot();
+        await (0, helpers_1.dumpPage)("create_first_user_before_password");
         await createFirstUser.fillPassword(password);
         await createFirstUser.fillPasswordConfirmation(password);
         await createFirstUser.accept();
-        // puppeteer goes too fast and screen is unresponsive after submit, a small delay helps
-        await (0, helpers_1.sleep)(2000);
+        // Wait longer for the backend to process the user creation
+        await (0, helpers_1.sleep)(4000);
     });
 }
 
@@ -747,17 +749,19 @@ exports.CongratulationPage = CongratulationPage;
 /*!***************************************!*\
   !*** ./src/pages/create_user_page.ts ***!
   \***************************************/
-/***/ ((__unused_webpack_module, exports) => {
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.CreateFirstUserPage = void 0;
+const fs_1 = __webpack_require__(/*! fs */ "fs");
+const path_1 = __webpack_require__(/*! path */ "path");
 class CreateFirstUserPage {
     page;
     fullNameInput = () => this.page.locator("input#userFullName");
     usernameInput = () => this.page.locator("input#userName");
-    passwordInput = () => this.page.locator("input#password");
+    passwordInput = () => this.page.locator("input#password, input[name='password'], input[type='password']");
     passwordConfirmationInput = () => this.page.locator("input#passwordConfirmation");
     acceptButton = () => this.page.locator("button[form='firstUserForm']");
     constructor(page) {
@@ -777,6 +781,22 @@ class CreateFirstUserPage {
     }
     async accept() {
         await this.acceptButton().click();
+    }
+    async ensureDirectoryExistence(dirPath) {
+        const resolvedPath = (0, path_1.resolve)(dirPath);
+        if (!(0, fs_1.existsSync)(resolvedPath)) {
+            (0, fs_1.mkdirSync)(resolvedPath, { recursive: true });
+            console.log(`Directory created: ${resolvedPath}`);
+        }
+        else {
+            console.log(`Directory already exists: ${resolvedPath}`);
+        }
+    }
+    async takeScreenshot() {
+        const screenshotBuffer = await this.page.screenshot();
+        this.ensureDirectoryExistence("/run/agama/scripts");
+        const screenshotPath = (0, path_1.resolve)("/run/agama/scripts", "overview_page_screenshot.png");
+        (0, fs_1.writeFileSync)(screenshotPath, screenshotBuffer);
     }
 }
 exports.CreateFirstUserPage = CreateFirstUserPage;
