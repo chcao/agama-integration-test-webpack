@@ -554,7 +554,7 @@ class SidebarPage {
     networkLink = () => this.page.locator("a[href='#/network']");
     storageLink = () => this.page.locator("a[href='#/storage']");
     softwareLink = () => this.page.locator("a[href='#/software']");
-    usersLink = () => this.page.locator("a[href='#/users']");
+    authenticationLink = () => this.page.locator("a[href='#/authentication']");
     constructor(page) {
         this.page = page;
     }
@@ -579,8 +579,8 @@ class SidebarPage {
     async goToSoftware() {
         await this.softwareLink().click();
     }
-    async goToUsers() {
-        await this.usersLink().click();
+    async goToAuthentication() {
+        await this.authenticationLink().click();
     }
 }
 exports.SidebarPage = SidebarPage;

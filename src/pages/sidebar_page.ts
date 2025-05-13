@@ -10,7 +10,7 @@ export class SidebarPage {
   private readonly networkLink = () => this.page.locator("a[href='#/network']");
   private readonly storageLink = () => this.page.locator("a[href='#/storage']");
   private readonly softwareLink = () => this.page.locator("a[href='#/software']");
-  private readonly usersLink = () => this.page.locator("a[href='#/users']");
+  private readonly authenticationLink = () => this.page.locator("a[href='#/authentication']");
 
   constructor(page: Page) {
     this.page = page;
@@ -44,8 +44,8 @@ export class SidebarPage {
     await this.softwareLink().click();
   }
 
-  async goToUsers() {
-    await this.usersLink().click();
+  async goToAuthentication() {
+    await this.authenticationLink().click();
   }
 }
 

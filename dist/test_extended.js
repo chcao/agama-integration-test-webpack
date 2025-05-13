@@ -36,22 +36,22 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.createFirstUser = createFirstUser;
 const helpers_1 = __webpack_require__(/*! ../lib/helpers */ "./src/lib/helpers.ts");
 const create_user_page_1 = __webpack_require__(/*! ../pages/create_user_page */ "./src/pages/create_user_page.ts");
-const users_page_1 = __webpack_require__(/*! ../pages/users_page */ "./src/pages/users_page.ts");
+const authentication_page_1 = __webpack_require__(/*! ../pages/authentication_page */ "./src/pages/authentication_page.ts");
 const sidebar_page_1 = __webpack_require__(/*! ../pages/sidebar_page */ "./src/pages/sidebar_page.ts");
 function createFirstUser(password) {
     (0, helpers_1.it)("should create first user", async function () {
-        const users = new users_page_1.UsersPage(helpers_1.page);
+        const authentication = new authentication_page_1.AuthenticationPage(helpers_1.page);
         const createFirstUser = new create_user_page_1.CreateFirstUserPage(helpers_1.page);
         const sidebar = new sidebar_page_1.SidebarPage(helpers_1.page);
-        await sidebar.goToUsers();
-        await users.defineAUserNow();
+        await sidebar.goToAuthentication();
+        await authentication.defineAUserNow();
         await createFirstUser.fillFullName("Bernhard M. Wiedemann");
         await createFirstUser.fillUserName("bernhard");
         await createFirstUser.fillPassword(password);
         await createFirstUser.fillPasswordConfirmation(password);
         await createFirstUser.accept();
-        // puppeteer goes too fast and screen is unresponsive after submit, a small delay helps
-        await (0, helpers_1.sleep)(2000);
+        // Wait for the "Define a user now" button to disappear
+        await helpers_1.page.waitForSelector("a[href='#/users/first/edit']", { timeout: 5000, hidden: true });
     });
 }
 
@@ -278,14 +278,14 @@ const helpers_1 = __webpack_require__(/*! ../lib/helpers */ "./src/lib/helpers.t
 const setup_root_user_authentication_page_1 = __webpack_require__(/*! ../pages/setup_root_user_authentication_page */ "./src/pages/setup_root_user_authentication_page.ts");
 const root_authentication_methods_1 = __webpack_require__(/*! ../pages/root_authentication_methods */ "./src/pages/root_authentication_methods.ts");
 const sidebar_page_1 = __webpack_require__(/*! ../pages/sidebar_page */ "./src/pages/sidebar_page.ts");
-const users_page_1 = __webpack_require__(/*! ../pages/users_page */ "./src/pages/users_page.ts");
+const authentication_page_1 = __webpack_require__(/*! ../pages/authentication_page */ "./src/pages/authentication_page.ts");
 function editRootUser(password) {
     (0, helpers_1.it)("should edit the root user", async function () {
         const sidebar = new sidebar_page_1.SidebarPage(helpers_1.page);
-        const users = new users_page_1.UsersPage(helpers_1.page);
+        const authentication = new authentication_page_1.AuthenticationPage(helpers_1.page);
         const setARootPassword = new root_authentication_methods_1.SetARootPasswordPage(helpers_1.page);
-        await sidebar.goToUsers();
-        await users.editRootUser();
+        await sidebar.goToAuthentication();
+        await authentication.editRootUser();
         await setARootPassword.usePassword();
         await setARootPassword.fillPassword(password);
         await setARootPassword.fillPasswordConfirmation(password);
@@ -690,6 +690,39 @@ var Desktop;
     Desktop["none"] = "None";
 })(Desktop || (exports.Desktop = Desktop = {}));
 ;
+
+
+/***/ }),
+
+/***/ "./src/pages/authentication_page.ts":
+/*!******************************************!*\
+  !*** ./src/pages/authentication_page.ts ***!
+  \******************************************/
+/***/ ((__unused_webpack_module, exports) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.AuthenticationPage = void 0;
+class AuthenticationPage {
+    page;
+    firstUserLink = () => this.page.locator("a[href='#/users/first']");
+    editRootUserButton = () => this.page.locator("a[href='#/users/root/edit']");
+    defineTheFirstUserButton = () => this.page.locator("a[href='#/users/first/edit']");
+    constructor(page) {
+        this.page = page;
+    }
+    async defineAUserNow() {
+        await this.firstUserLink().click();
+    }
+    async editRootUser() {
+        await this.editRootUserButton().click();
+    }
+    async defineTheFirstUser() {
+        await this.defineTheFirstUserButton().click();
+    }
+}
+exports.AuthenticationPage = AuthenticationPage;
 
 
 /***/ }),
@@ -1104,7 +1137,7 @@ class SidebarPage {
     networkLink = () => this.page.locator("a[href='#/network']");
     storageLink = () => this.page.locator("a[href='#/storage']");
     softwareLink = () => this.page.locator("a[href='#/software']");
-    usersLink = () => this.page.locator("a[href='#/users']");
+    authenticationLink = () => this.page.locator("a[href='#/authentication']");
     constructor(page) {
         this.page = page;
     }
@@ -1129,8 +1162,8 @@ class SidebarPage {
     async goToSoftware() {
         await this.softwareLink().click();
     }
-    async goToUsers() {
-        await this.usersLink().click();
+    async goToAuthentication() {
+        await this.authenticationLink().click();
     }
 }
 exports.SidebarPage = SidebarPage;
@@ -1201,39 +1234,6 @@ class StoragePage {
     }
 }
 exports.StoragePage = StoragePage;
-
-
-/***/ }),
-
-/***/ "./src/pages/users_page.ts":
-/*!*********************************!*\
-  !*** ./src/pages/users_page.ts ***!
-  \*********************************/
-/***/ ((__unused_webpack_module, exports) => {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.UsersPage = void 0;
-class UsersPage {
-    page;
-    firstUserLink = () => this.page.locator("a[href='#/users/first']");
-    editRootUserButton = () => this.page.locator("a[href='#/users/root/edit']");
-    defineTheFirstUserButton = () => this.page.locator("a[href='#/users/first/edit']");
-    constructor(page) {
-        this.page = page;
-    }
-    async defineAUserNow() {
-        await this.firstUserLink().click();
-    }
-    async editRootUser() {
-        await this.editRootUserButton().click();
-    }
-    async defineTheFirstUser() {
-        await this.defineTheFirstUserButton().click();
-    }
-}
-exports.UsersPage = UsersPage;
 
 
 /***/ }),

@@ -2,16 +2,16 @@ import { it, page, sleep } from "../lib/helpers";
 import { SetupRootUserAuthenticationPage } from "../pages/setup_root_user_authentication_page";
 import { SetARootPasswordPage } from "../pages/root_authentication_methods";
 import { SidebarPage } from "../pages/sidebar_page";
-import { UsersPage } from "../pages/users_page";
+import { AuthenticationPage } from "../pages/authentication_page";
 
 export function editRootUser(password: string) {
   it("should edit the root user", async function () {
     const sidebar = new SidebarPage(page);
-    const users = new UsersPage(page);
+    const authentication = new AuthenticationPage(page);
     const setARootPassword = new SetARootPasswordPage(page);
 
-    await sidebar.goToUsers();
-    await users.editRootUser();
+    await sidebar.goToAuthentication();
+    await authentication.editRootUser();
     await setARootPassword.usePassword();
     await setARootPassword.fillPassword(password);
     await setARootPassword.fillPasswordConfirmation(password);
