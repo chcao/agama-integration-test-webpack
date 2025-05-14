@@ -13,11 +13,15 @@ export function createFirstUser(password: string) {
 
     await users.defineAUserNow();
     await createFirstUser.fillFullName("Bernhard M. Wiedemann");
+    await sleep(10000);
     await createFirstUser.fillUserName("bernhard");
+    await sleep(10000);
     await createFirstUser.fillPassword(password);
+    await sleep(10000);
     await createFirstUser.fillPasswordConfirmation(password);
+    await sleep(10000);
     await createFirstUser.accept();
     // puppeteer goes too fast and screen is unresponsive after submit, a small delay helps
-    await sleep(2000);
+    await sleep(10000);
   });
 }

@@ -2,6 +2,7 @@ import { type Page } from "puppeteer-core";
 
 export class UsersPage {
   private readonly page: Page;
+  // private readonly warningAlert = () => this.page.locator("#warning-message");
   private readonly firstUserLink = () => this.page.locator("a[href='#/users/first']");
   private readonly editRootUserButton = () => this.page.locator("a[href='#/users/root/edit']");
   private readonly defineTheFirstUserButton = () =>

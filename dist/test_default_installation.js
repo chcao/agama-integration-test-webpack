@@ -45,12 +45,16 @@ function createFirstUser(password) {
         await sidebar.goToUsers();
         await users.defineAUserNow();
         await createFirstUser.fillFullName("Bernhard M. Wiedemann");
+        await (0, helpers_1.sleep)(10000);
         await createFirstUser.fillUserName("bernhard");
+        await (0, helpers_1.sleep)(10000);
         await createFirstUser.fillPassword(password);
+        await (0, helpers_1.sleep)(10000);
         await createFirstUser.fillPasswordConfirmation(password);
+        await (0, helpers_1.sleep)(10000);
         await createFirstUser.accept();
         // puppeteer goes too fast and screen is unresponsive after submit, a small delay helps
-        await (0, helpers_1.sleep)(2000);
+        await (0, helpers_1.sleep)(10000);
     });
 }
 
@@ -1218,6 +1222,7 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.UsersPage = void 0;
 class UsersPage {
     page;
+    // private readonly warningAlert = () => this.page.locator("#warning-message");
     firstUserLink = () => this.page.locator("a[href='#/users/first']");
     editRootUserButton = () => this.page.locator("a[href='#/users/root/edit']");
     defineTheFirstUserButton = () => this.page.locator("a[href='#/users/first/edit']");
