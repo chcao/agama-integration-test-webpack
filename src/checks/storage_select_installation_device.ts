@@ -14,4 +14,7 @@ export function selectMoreDevices() {
     await storage.addLvmVolumeGroup();
     await lvm.accept();
   });
+
+export function deleteLvmVolumeGroupSystem () {
+  it("should delete LVM vloume group system", async function () {
 }
